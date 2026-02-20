@@ -4,7 +4,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { Card } from '../components/ui/Card'
 import { Button } from '../components/ui/Button'
 import { Input } from '../components/ui/Input'
-import { login } from '../utils/storyGenerator'
+import { login, isAuthenticated } from '../utils/storyGenerator'
 import { LogIn, Sparkles } from 'lucide-react'
 
 export default function LoginPage() {
@@ -20,7 +20,7 @@ export default function LoginPage() {
         setError('')
         try {
             await login(identifier, password)
-            navigate('/generator')
+            navigate('/')
         } catch (err) {
             setError(err.response?.data?.detail || 'Login failed. Try again!')
             // Auto-clear error after 3 seconds
@@ -77,12 +77,14 @@ export default function LoginPage() {
                     <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200"></div></div>
                     <div className="relative flex justify-center"><span className="bg-white px-4 text-sm text-slate-400 font-semibold">or</span></div>
                 </div>
-                <button
-                    onClick={() => navigate('/generator')}
-                    className="w-full py-3 rounded-2xl border-2 border-secondary/30 text-secondary font-bold font-quicksand text-lg hover:bg-secondary hover:text-white transition-all active:scale-95"
-                >
-                    🚀 Continue as Guest
-                </button>
+                {!isAuthenticated() && (
+                    <button
+                        onClick={() => navigate('/generator')}
+                        className="w-full py-3 rounded-2xl border-2 border-secondary/30 text-secondary font-bold font-quicksand text-lg hover:bg-secondary hover:text-white transition-all active:scale-95"
+                    >
+                        🚀 Continue as Guest
+                    </button>
+                )}
             </Card>
         </div>
     )

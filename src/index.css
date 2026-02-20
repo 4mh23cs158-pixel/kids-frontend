@@ -125,6 +125,48 @@
   }
 }
 
+/* Storybook Typography for Markdown */
+.prose-story {
+  @apply font-quicksand text-slate-700 leading-loose;
+  font-size: 1.125rem;
+}
+
+.prose-story h1 {
+  @apply font-bubblegum text-4xl text-primary mt-8 mb-4;
+}
+
+.prose-story h2 {
+  @apply font-bubblegum text-3xl text-secondary mt-6 mb-3;
+}
+
+.prose-story p {
+  @apply mb-6;
+}
+
+.prose-story strong {
+  @apply font-bold text-primary-dark;
+}
+
+.prose-story em {
+  @apply italic text-secondary-dark;
+}
+
+.prose-story blockquote {
+  @apply border-l-4 border-accent-dark pl-4 italic my-6 bg-accent/10 py-2 rounded-r-lg;
+}
+
+.prose-story ul {
+  @apply list-disc list-inside mb-6 space-y-2;
+}
+
+.prose-story ol {
+  @apply list-decimal list-inside mb-6 space-y-2;
+}
+
+.prose-story li {
+  @apply ml-2;
+}
+
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 10px;

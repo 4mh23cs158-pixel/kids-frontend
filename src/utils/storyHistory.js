@@ -1,15 +1,32 @@
-// 📚 Story History — localStorage-based persistence per user
+// 📚 Story History — isolated storage for Guests (Session) and Users (Local)
 
-const STORAGE_KEY = 'story_magic_history'
+const GUEST_KEY = 'story_magic_guest_history'
+const USER_BASE_KEY = 'story_magic_user_history'
 
-const getStorageKey = () => {
-    const token = localStorage.getItem('token')
-    // Use a hash of the token to namespace stories per user
-    return token ? `${STORAGE_KEY}_${btoa(token).slice(0, 12)}` : STORAGE_KEY
+const getAuthToken = () => localStorage.getItem('token')
+
+const getStorageConfig = () => {
+    const token = getAuthToken()
+    if (token) {
+        // Logged-in: Persistent localStorage
+        const userId = btoa(token).slice(0, 12)
+        return {
+            storage: localStorage,
+            key: `${USER_BASE_KEY}_${userId}`
+        }
+    } else {
+        // Guest: Temporary sessionStorage
+        return {
+            storage: sessionStorage,
+            key: GUEST_KEY
+        }
+    }
 }
 
 export const saveStory = (storyData) => {
+    const { storage, key } = getStorageConfig()
     const stories = getStories()
+
     const entry = {
         id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
         name: storyData.name,
@@ -21,14 +38,16 @@ export const saveStory = (storyData) => {
         panels: storyData.panels || [],
         createdAt: new Date().toISOString(),
     }
-    stories.unshift(entry) // newest first
-    localStorage.setItem(getStorageKey(), JSON.stringify(stories))
+
+    stories.unshift(entry)
+    storage.setItem(key, JSON.stringify(stories))
     return entry
 }
 
 export const getStories = () => {
+    const { storage, key } = getStorageConfig()
     try {
-        const raw = localStorage.getItem(getStorageKey())
+        const raw = storage.getItem(key)
         return raw ? JSON.parse(raw) : []
     } catch {
         return []
@@ -36,10 +55,12 @@ export const getStories = () => {
 }
 
 export const deleteStory = (id) => {
+    const { storage, key } = getStorageConfig()
     const stories = getStories().filter(s => s.id !== id)
-    localStorage.setItem(getStorageKey(), JSON.stringify(stories))
+    storage.setItem(key, JSON.stringify(stories))
 }
 
 export const clearStories = () => {
-    localStorage.removeItem(getStorageKey())
+    const { storage, key } = getStorageConfig()
+    storage.removeItem(key)
 }

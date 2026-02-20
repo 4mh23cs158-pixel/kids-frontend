@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
 import { Sparkles, Stars, Rocket, BookOpen, Wand2, Globe, Palette, Heart, Shield, Zap, Users, Brain, GraduationCap } from 'lucide-react'
+import { isAuthenticated } from '../utils/storyGenerator'
 
 const STATS = [
     { label: 'Stories Created', value: '10K+', icon: <BookOpen size={24} /> },
@@ -125,12 +126,14 @@ export default function LandingPage() {
                             <Sparkles /> Surprise Me!
                         </button>
 
-                        <button
-                            onClick={() => navigate('/generator')}
-                            className="text-secondary font-quicksand font-bold text-lg px-8 py-4 rounded-full border-2 border-secondary/20 hover:bg-secondary hover:text-white transition-all active:scale-95"
-                        >
-                            🚀 Try as Guest
-                        </button>
+                        {!isAuthenticated() && (
+                            <button
+                                onClick={() => navigate('/generator')}
+                                className="text-secondary font-quicksand font-bold text-lg px-8 py-4 rounded-full border-2 border-secondary/20 hover:bg-secondary hover:text-white transition-all active:scale-95"
+                            >
+                                🚀 Try as Guest
+                            </button>
+                        )}
                     </motion.div>
                 </main>
             </section>

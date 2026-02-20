@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Sparkles, Home, Info, LogIn, UserPlus, LogOut, BookOpen } from 'lucide-react'
+import { Sparkles, Home, Info, LogIn, UserPlus, LogOut, BookOpen, User } from 'lucide-react'
 import { isAuthenticated, logout } from '../../utils/storyGenerator'
 
 export default function Navbar() {
@@ -63,6 +63,13 @@ export default function Navbar() {
                                 >
                                     <BookOpen size={18} />
                                     <span className="hidden sm:inline">My Stories</span>
+                                </Link>
+                                <Link
+                                    to="/profile"
+                                    className="flex items-center gap-1 font-bold text-slate-600 hover:text-primary px-3 py-2 transition-colors border-l border-slate-100 ml-2"
+                                >
+                                    <User size={18} />
+                                    <span className="hidden sm:inline">Profile</span>
                                 </Link>
                                 <button
                                     onClick={handleLogout}

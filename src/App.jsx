@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import AboutPage from './pages/AboutPage'
 import MyStoriesPage from './pages/MyStoriesPage'
+import ProfilePage from './pages/ProfilePage'
 import Navbar from './components/ui/Navbar'
 import { isAuthenticated } from './utils/storyGenerator'
 
@@ -38,9 +39,17 @@ function App() {
                             </AuthGuard>
                         }
                     />
+                    <Route
+                        path="/profile"
+                        element={
+                            <AuthGuard>
+                                <ProfilePage />
+                            </AuthGuard>
+                        }
+                    />
                 </Routes>
             </div>
-        </Router>
+        </Router >
     )
 }
 

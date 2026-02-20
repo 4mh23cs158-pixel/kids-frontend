@@ -18,10 +18,13 @@ export default function GeneratorPage() {
         age: '5',
         theme: 'Space Adventure',
         moral: 'Kindness is magic',
-        language: 'English'
+        language: 'English',
+        customTheme: '',
+        customMoral: ''
     })
 
     const [loading, setLoading] = useState(false)
+    const [panelsLoading, setPanelsLoading] = useState(false)
     const [story, setStory] = useState(null)
     const [comicPanels, setComicPanels] = useState(null)
     const [error, setError] = useState('')
@@ -60,29 +63,84 @@ export default function GeneratorPage() {
         setError('')
 
         try {
-            // Call backend route that generates BOTH story + panels
-            const result = await generateComic({
+            // Determine actual values (custom or preset)
+            const finalTheme = formData.theme === 'custom' ? formData.customTheme : formData.theme
+            const finalMoral = formData.moral === 'custom' ? formData.customMoral : formData.moral
+
+            if (!finalTheme || !finalMoral) {
+                setError('Please provide a theme and moral!')
+                setLoading(false)
+                return
+            }
+
+            // 🚀 STEP 1: Generate Story first for immediate display
+            const storyResult = await generateStory({
                 ...formData,
+                theme: finalTheme,
+                moral: finalMoral,
                 age: parseInt(formData.age)
             })
 
-            setStory(result.story)
-            setComicPanels(result.panels)
+            setStory(storyResult.story)
+            setLoading(false) // Story text is now visible
 
-            // 📚 Auto-save story to history ONLY if logged in
-            if (isAuthenticated()) {
-                saveStory({
+            // 📈 Increment total generated counter
+            const currentTotal = parseInt(localStorage.getItem('total_stories_generated') || '0')
+            localStorage.setItem('total_stories_generated', (currentTotal + 1).toString())
+
+            // ⏳ STEP 2: Generate Panels in background
+            setPanelsLoading(true)
+            try {
+                const comicResult = await generatePanels({
                     ...formData,
-                    story: result.story,
-                    panels: result.panels
+                    theme: finalTheme,
+                    moral: finalMoral,
+                    age: parseInt(formData.age),
+                    story: storyResult.story
                 })
+                setComicPanels(comicResult.panels)
+
+                // 📚 Auto-save story to history ONLY if logged in
+                if (isAuthenticated()) {
+                    saveStory({
+                        ...formData,
+                        theme: finalTheme,
+                        moral: finalMoral,
+                        story: storyResult.story,
+                        panels: comicResult.panels
+                    })
+                }
+            } catch (pErr) {
+                console.error("Panels generation failed:", pErr)
+                // Fallback: if generatePanels fails (maybe endpoint doesn't exist), try generateComic
+                try {
+                    const result = await generateComic({
+                        ...formData,
+                        theme: finalTheme,
+                        moral: finalMoral,
+                        age: parseInt(formData.age)
+                    })
+                    setComicPanels(result.panels)
+                    if (isAuthenticated()) {
+                        saveStory({
+                            ...formData,
+                            theme: finalTheme,
+                            moral: finalMoral,
+                            story: storyResult.story,
+                            panels: result.panels
+                        })
+                    }
+                } catch (cErr) {
+                    console.error("Fallback generation failed:", cErr)
+                }
+            } finally {
+                setPanelsLoading(false)
             }
 
         } catch (err) {
+            setLoading(false)
             setError(err.response?.data?.detail || 'The magic failed! Please try again.')
             setTimeout(() => setError(''), 5000)
-        } finally {
-            setLoading(false)
         }
     }
 
@@ -334,9 +392,29 @@ export default function GeneratorPage() {
                                     { value: 'Secret Ice Kingdom', label: '❄️ Secret Ice Kingdom' },
                                     { value: 'Dragon Flying School', label: '🐉 Dragon Flying School' },
                                     { value: 'Pirate Treasure Hunt', label: '🏴‍☠️ Pirate Treasure Hunt' },
-                                    { value: 'Fairy Tale Land', label: '🧚 Fairy Tale Land' }
+                                    { value: 'Fairy Tale Land', label: '🧚 Fairy Tale Land' },
+                                    { value: 'custom', label: '✍️ Write Your Own...' }
                                 ]}
                             />
+
+                            <AnimatePresence>
+                                {formData.theme === 'custom' && (
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                    >
+                                        <Input
+                                            placeholder="Enter your custom theme (e.g. Candy Land)"
+                                            value={formData.customTheme}
+                                            onChange={(e) => setFormData({ ...formData, customTheme: e.target.value.slice(0, 50) })}
+                                            className="border-dashed border-primary"
+                                        />
+                                        <p className="text-[10px] text-right text-slate-400 mt-1">{formData.customTheme.length}/50</p>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+
                             <Select
                                 label="Moral"
                                 value={formData.moral}
@@ -351,9 +429,28 @@ export default function GeneratorPage() {
                                     { value: 'Courage to be different', label: '🦋 Courage to be different' },
                                     { value: 'Never give up', label: '💪 Never give up' },
                                     { value: 'Respect nature', label: '🌿 Respect nature' },
-                                    { value: 'Curiosity leads to discovery', label: '🔍 Curiosity leads to discovery' }
+                                    { value: 'Curiosity leads to discovery', label: '🔍 Curiosity leads to discovery' },
+                                    { value: 'custom', label: '✍️ Write Your Own...' }
                                 ]}
                             />
+
+                            <AnimatePresence>
+                                {formData.moral === 'custom' && (
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                    >
+                                        <Input
+                                            placeholder="Enter your custom moral"
+                                            value={formData.customMoral}
+                                            onChange={(e) => setFormData({ ...formData, customMoral: e.target.value.slice(0, 60) })}
+                                            className="border-dashed border-secondary"
+                                        />
+                                        <p className="text-[10px] text-right text-slate-400 mt-1">{formData.customMoral.length}/60</p>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
 
                             <Button
                                 type="submit"
@@ -424,14 +521,26 @@ export default function GeneratorPage() {
                                         <h3 className="text-3xl font-bubblegum text-secondary">Comic Strip Blast!</h3>
                                     </div>
 
-                                    {comicPanels ? (
+                                    {panelsLoading ? (
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            {[1, 2, 3, 4].map((i) => (
+                                                <div key={i} className="glass-card overflow-hidden border-2 border-slate-100 animate-pulse">
+                                                    <div className="aspect-[4/3] bg-slate-200" />
+                                                    <div className="p-4 space-y-2">
+                                                        <div className="h-3 bg-slate-200 rounded w-3/4" />
+                                                        <div className="h-3 bg-slate-200 rounded w-1/2" />
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : comicPanels ? (
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             {comicPanels.map((panel, idx) => (
                                                 <motion.div
                                                     key={idx}
-                                                    initial={{ opacity: 0, y: 20 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    transition={{ delay: idx * 0.1 }}
+                                                    initial={{ opacity: 0, scale: 0.9 }}
+                                                    animate={{ opacity: 1, scale: 1 }}
+                                                    transition={{ duration: 0.5 }}
                                                     className="glass-card overflow-hidden border-2 border-secondary/20 hover:border-secondary transition-all"
                                                 >
                                                     <div className="aspect-[4/3] bg-slate-100 flex items-center justify-center relative overflow-hidden">
@@ -439,6 +548,7 @@ export default function GeneratorPage() {
                                                             src={panel.image_url}
                                                             alt={`Scene ${idx + 1}`}
                                                             className="w-full h-full object-cover"
+                                                            onLoad={(e) => e.target.classList.add('opacity-100')}
                                                             onError={(e) => e.target.src = 'https://via.placeholder.com/600x400?text=Magic+Coming+Soon'}
                                                         />
                                                     </div>

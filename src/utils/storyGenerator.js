@@ -7,13 +7,20 @@ export const generateStory = async (data) => {
 };
 
 
+// 🎨 Generate ONLY panels (for background loading)
+export const generatePanels = async (data) => {
+    const response = await api.post('/story/generate-panels', data);
+    return response.data;
+};
+
+
 // 🎨 Generate Story + Comic Together (MAIN FUNCTION)
 export const generateComic = async (data) => {
     // data: { name, age, theme, moral, language }
 
     const response = await api.post('/story/generate-comic', data);
 
-    return response.data; 
+    return response.data;
     // expected:
     // {
     //   story: "...",
