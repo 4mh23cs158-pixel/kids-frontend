@@ -1,4 +1,4 @@
-const HERO_NAMES = ['Leo', 'Luna', 'Oliver', 'Mia', 'Felix', 'Zara', 'Toby', 'Bella', 'Jasper', 'Chloe'];
+const HERO_NAMES = ['Avery', 'Riley', 'Jordan', 'Quinn', 'Skyler', 'River', 'Nova', 'Phoenix', 'Sage', 'Rowan', 'Kai', 'Ember', 'Aspen', 'Finley', 'Wren'];
 const THEMES = [
     'Space Adventure',
     'Magical Forest',
@@ -9,7 +9,9 @@ const THEMES = [
     'Time Travel Quest',
     'Talking Animals Garden',
     'Secret Ice Kingdom',
-    'Drangon Flying School'
+    'Dragon Flying School',
+    'Pirate Treasure Hunt',
+    'Fairy Tale Land'
 ];
 const MORALS = [
     'Kindness is magic',
@@ -24,7 +26,11 @@ const MORALS = [
     'Curiosity leads to discovery'
 ];
 const AGES = ['4', '8', '14'];
-const LANGUAGES = ['English', 'Spanish', 'French', 'Hindi'];
+const LANGUAGES = [
+    'English', 'Spanish', 'French', 'Hindi', 'German', 'Portuguese',
+    'Italian', 'Japanese', 'Korean', 'Chinese', 'Arabic', 'Russian',
+    'Tamil', 'Telugu', 'Kannada', 'Bengali', 'Marathi', 'Urdu'
+];
 
 export const getRandomStoryData = () => {
     return {

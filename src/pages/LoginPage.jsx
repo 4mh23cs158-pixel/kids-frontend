@@ -73,6 +73,16 @@ export default function LoginPage() {
                 <p className="text-center mt-6 text-slate-600">
                     New adventurer? <Link to="/signup" className="text-primary font-bold hover:underline">Create an account!</Link>
                 </p>
+                <div className="relative my-4">
+                    <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200"></div></div>
+                    <div className="relative flex justify-center"><span className="bg-white px-4 text-sm text-slate-400 font-semibold">or</span></div>
+                </div>
+                <button
+                    onClick={() => navigate('/generator')}
+                    className="w-full py-3 rounded-2xl border-2 border-secondary/30 text-secondary font-bold font-quicksand text-lg hover:bg-secondary hover:text-white transition-all active:scale-95"
+                >
+                    🚀 Continue as Guest
+                </button>
             </Card>
         </div>
     )

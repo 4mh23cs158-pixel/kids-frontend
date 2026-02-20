@@ -2,6 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Gradient text utility */
+.text-gradient {
+  background: linear-gradient(135deg, #FF6B9D 0%, #FF4081 30%, #4ECDC4 70%, #FF6B9D 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer-text 4s ease-in-out infinite;
+}
+
+@keyframes shimmer-text {
+
+  0%,
+  100% {
+    background-position: 0% center;
+  }
+
+  50% {
+    background-position: 200% center;
+  }
+}
+
 :root {
   --primary: #FF6B9D;
   --primary-light: #FF8EBC;

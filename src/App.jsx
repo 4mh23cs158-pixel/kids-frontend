@@ -29,14 +29,7 @@ function App() {
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/signup" element={<SignupPage />} />
-                    <Route
-                        path="/generator"
-                        element={
-                            <AuthGuard>
-                                <GeneratorPage />
-                            </AuthGuard>
-                        }
-                    />
+                    <Route path="/generator" element={<GeneratorPage />} />
                     <Route
                         path="/my-stories"
                         element={

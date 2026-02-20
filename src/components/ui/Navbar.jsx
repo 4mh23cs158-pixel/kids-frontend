@@ -29,7 +29,7 @@ export default function Navbar() {
                     <div className="bg-primary p-2 rounded-xl group-hover:rotate-12 transition-transform">
                         <Sparkles className="text-white" size={24} />
                     </div>
-                    <span className="text-2xl font-bubblegum text-primary hidden sm:block">Story Magic</span>
+                    <span className="text-2xl font-bubblegum text-primary hidden sm:block">BrainBloom AI</span>
                 </Link>
 
                 <div className="flex items-center gap-6">
@@ -49,14 +49,14 @@ export default function Navbar() {
                     <div className="h-6 w-px bg-slate-200 hidden md:block"></div>
 
                     <div className="flex items-center gap-3">
+                        <Link
+                            to="/generator"
+                            className="bg-primary text-white px-5 py-2 rounded-full font-bold hover:bg-primary-dark transition-all shadow-md active:scale-95"
+                        >
+                            Create!
+                        </Link>
                         {isAuth ? (
                             <>
-                                <Link
-                                    to="/generator"
-                                    className="bg-primary text-white px-5 py-2 rounded-full font-bold hover:bg-primary-dark transition-all shadow-md active:scale-95"
-                                >
-                                    Create!
-                                </Link>
                                 <Link
                                     to="/my-stories"
                                     className="flex items-center gap-1 font-bold text-slate-600 hover:text-secondary px-3 py-2 transition-colors"

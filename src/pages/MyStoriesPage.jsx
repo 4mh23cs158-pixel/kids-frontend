@@ -5,6 +5,7 @@ import { Button } from '../components/ui/Button'
 import { getStories, deleteStory } from '../utils/storyHistory'
 import { BookOpen, Trash2, Clock, Sparkles, ChevronDown, ChevronUp, Image as ImageIcon, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { MarkdownRenderer } from '../components/ui/MarkdownRenderer'
 
 export default function MyStoriesPage() {
     const [stories, setStories] = useState([])
@@ -143,9 +144,9 @@ export default function MyStoriesPage() {
                                                     <h4 className="font-bubblegum text-xl text-primary mb-3 flex items-center gap-2">
                                                         <BookOpen size={20} /> The Story
                                                     </h4>
-                                                    <p className="text-base leading-relaxed text-slate-700 font-quicksand whitespace-pre-wrap first-letter:text-4xl first-letter:font-bubblegum first-letter:text-primary first-letter:mr-1">
-                                                        {entry.story}
-                                                    </p>
+                                                    <div className="prose prose-slate max-w-none prose-p:text-base prose-p:leading-relaxed prose-p:text-slate-700 prose-p:font-quicksand">
+                                                        <MarkdownRenderer content={entry.story} />
+                                                    </div>
                                                 </div>
 
                                                 {/* Comic Panels */}

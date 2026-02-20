@@ -10,7 +10,7 @@ export default function AboutPage() {
                 animate={{ opacity: 1, y: 0 }}
                 className="text-center mb-16"
             >
-                <h1 className="text-5xl md:text-7xl font-bubblegum text-primary mb-6">About Story Magic</h1>
+                <h1 className="text-5xl md:text-7xl font-bubblegum text-primary mb-6">About BrainBloom AI</h1>
                 <p className="text-2xl text-slate-600 font-semibold">Creating wonder, one story at a time. ✨</p>
             </motion.div>
 
@@ -64,7 +64,7 @@ export default function AboutPage() {
             >
                 <h2 className="text-3xl font-bubblegum text-primary mb-4">Join the Adventure</h2>
                 <p className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
-                    Whether it's a journey through the stars or a lesson in the jungle, Story Magic is here to make every bedtime special.
+                    Whether it's a journey through the stars or a lesson in the jungle, BrainBloom AI is here to make every bedtime special.
                 </p>
             </motion.div>
         </div>
